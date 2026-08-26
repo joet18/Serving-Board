@@ -41,16 +41,23 @@ Serving-Board/
 
 ## Tech Stack
 
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+**Current:**
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (52.4% JavaScript, 29.3% CSS, 18.3% HTML)
 - **Storage:** Browser localStorage and sessionStorage
 - **Data Format:** JSON
+
+**Planned Upgrades:**
+- Backend database integration (replacing localStorage)
+- API endpoints for data persistence
+- User authentication system
+- Additional features and improvements
 
 ## Getting Started
 
 ### Prerequisites
 
 - A modern web browser (Chrome, Firefox, Safari, Edge)
-- No server or build tools required
+- No server or build tools required (currently)
 
 ### Installation
 
@@ -103,12 +110,17 @@ cd Serving-Board
 
 ## Data Storage
 
+**Current Implementation:**
 The application uses browser storage to persist data:
-
 - **localStorage** - Stores event data persistently across sessions
 - **sessionStorage** - Stores user session information (cleared when browser closes)
+- Default events are loaded from `Data/default-events.json` on first use
 
-Default events are loaded from `Data/default-events.json` on first use.
+**Future Implementation:**
+- Backend database will handle all data persistence
+- API calls will replace localStorage operations
+- User sessions will be managed server-side
+- Data syncing across devices
 
 ## Event Object Structure
 
@@ -134,6 +146,7 @@ Main application logic handling:
 - Search and filter functionality
 - Navigation between board and my events views
 - Session management and guards
+- Currently uses localStorage for persistence
 
 ### `Pray Js/auth.js`
 Authentication handling and session verification
@@ -148,22 +161,47 @@ Login form submission and user creation
 - Safari 14+
 - Edge 90+
 
-## Limitations
+## Current Limitations
 
 - Single-user per browser session
 - Data resets if browser cache is cleared
-- No server-side persistence
+- No server-side persistence (localStorage only)
 - No actual user authentication (demo only)
+- No cross-device synchronization
 
-## Future Enhancements
+## Planned Enhancements
 
-- Backend database for data persistence
-- User role-based access control
-- Email notifications for event updates
-- Event capacity notifications
-- Past event history
-- Recurring events
-- Comments and communication system
+- **Backend Integration**
+  - Database setup for persistent data storage
+  - API endpoints for CRUD operations
+  - Server-side user authentication
+  - Session management with tokens
+
+- **Feature Additions**
+  - User role-based access control
+  - Email notifications for event updates
+  - Event capacity notifications
+  - Past event history and archives
+  - Recurring events
+  - Comments and communication system
+  - Event attendance tracking
+  - Volunteer hours tracking
+
+- **User Experience**
+  - Dashboard analytics
+  - Export event data
+  - Calendar view
+  - Mobile responsive design improvements
+  - Real-time notifications
+
+## Development Notes
+
+This README will be updated as the project evolves. Major changes include:
+- Codebase expansion and refactoring
+- Database schema implementation
+- API development
+- Feature additions and improvements
+- Performance optimizations
 
 ## License
 
@@ -180,4 +218,5 @@ For issues or questions, please open an issue on the GitHub repository.
 ---
 
 **Created by:** joet18  
-**Repository:** [Serving-Board](https://github.com/joet18/Serving-Board)
+**Repository:** [Serving-Board](https://github.com/joet18/Serving-Board)  
+**Last Updated:** 2026-08-26
