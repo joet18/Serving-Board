@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pray.io</title>
+    <link rel="stylesheet" href="../Pray.css/SS.css">
+    <script src="../Pray Js/login.js" defer></script>
+    <script src="../Pray Js/auth.js" defer></script>
+</head>
+<body>
+    <main class="ln-box">
+    <h1>Serve</h1>
+    <p class="serve-tell">Sign up to help on Sunday's</p>
+    <div class="login-panel"> 
+    <div class="tabs" id="tabs">
+        <button class="tab" data-tab="signin" type="button">Sign In</button>
+        <button class="tab" data-tab="signup" type="button">Sign up</button>
+    </div>
+   
+    <form class="signin-form input-form">
+        <input class="input-field" type="text" placeholder="Username" autocomplete="username" required>
+        <input class="input-field" type="password" placeholder="Password" autocomplete="new new-password" required>
+        <button class="submit-button" type="submit">Login in</button>
+        <p class="error" id="login-error"></p>
+    </form>
+    <form  class="signup-form  input-form hidden" id="sup">
+        <input class="input-field" type="text" placeholder="Register Username" autocomplete="username" required>
+        <input class="input-field" type="password" placeholder="Register Password" autocomplete="new-password" required>
+        <button class="submit-button" type="submit">Create account</button>
+        <p class="error" id="signup-error"></p>
+    </form>
+     </div>
+    </main>
+</body>
+</html>

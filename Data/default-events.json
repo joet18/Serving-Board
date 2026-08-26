@@ -1,0 +1,102 @@
+[
+    {
+        "id": "Default-1",
+        "title": "Saturday chair and stage setup",
+        "date": "2026-08-22",
+        "category": "setup",
+        "capacity": 6,
+        "description": "Move chairs, set the stage, and run a quick sound check the evening before Sunday.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-2",
+        "title": "Sunday morning welcome team",
+        "date": "2026-08-23",
+        "category": "worship",
+        "capacity": 4,
+        "description": "Greet people at the door, hand out bulletins, and help visitors find a seat before the 9am service.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-3",
+        "title": "Kids church helpers",
+        "date": "2026-08-23",
+        "category": "kids",
+        "capacity": 3,
+        "description": "Help run the lesson and games for the 5-8 year olds during the second service.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-4",
+        "title": "Coffee and pastries after service",
+        "date": "2026-08-23",
+        "category": "kitchen",
+        "capacity": 2,
+        "description": "Brew coffee, set out cups and pastries, and clean up once the hall empties.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-5",
+        "title": "Food bank packing night",
+        "date": "2026-08-26",
+        "category": "outreach",
+        "capacity": 8,
+        "description": "Sort donations and pack boxes for families in the neighbourhood. Wear comfortable shoes.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-6",
+        "title": "Worship band rehearsal",
+        "date": "2026-08-27",
+        "category": "worship",
+        "capacity": 6,
+        "description": "Run through Sunday's set list. Singers and instrumentalists both welcome.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-7",
+        "title": "Building clean-up morning",
+        "date": "2026-08-29",
+        "category": "setup",
+        "capacity": 5,
+        "description": "Deep clean the hall, wipe down the chairs, and tidy the storage room.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "Default-8",
+        "title": "Nursery care team",
+        "date": "2026-08-30",
+        "category": "kids",
+        "capacity": 3,
+        "description": "Look after infants and toddlers during the 9am and 11am services.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "seed-9",
+        "title": "Community soup kitchen",
+        "date": "2026-09-02",
+        "category": "outreach",
+        "capacity": 10,
+        "description": "Prepare and serve a hot meal for the weekly community lunch downtown.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    },
+    {
+        "id": "seed-10",
+        "title": "Sunday lunch clean-up crew",
+        "date": "2026-09-06",
+        "category": "kitchen",
+        "capacity": 4,
+        "description": "Wash dishes, wipe tables, and reset the kitchen after the fellowship lunch.",
+        "createdBy": "admin",
+        "enrolledUsers": []
+    }
+]

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serve board</title>
+    <link rel="stylesheet" href="../Pray.css/SS.css">
+    <script src="../Pray Js/serve.js" defer></script>
+    <script src="../Pray Js/auth.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1>Serve Board</h1>
+        <nav>
+            <a href="#" id="nav-board" class="active">Board</a>
+            <a href="#" id="nav-myevents">My events</a>
+            <span id="wel"></span>
+            <button class="link-btn" id="logout">log out</button>
+        </nav>
+    </header>
+
+    <button class="primary-btn" type="submit" id="prim-btn">Add event</button>
+
+    <form class="panal hidden" id="eventform">
+        <input type="text" placeholder="Event title" id="event-title">
+        <input type="date" placeholder="Event Date" id="date">
+        <select id="catagory">
+            <option value="setup">Setup</option>
+            <option value="worship">Worship</option>
+            <option value="kids">Kids</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="outreach">Outreach</option>
+        </select>
+        <input type="number" id="event-capacity" min="1" placeholder="Spots">
+        <textarea id="event-description" placeholder="Description ..."></textarea>
+        <button type="submit" class="primary-btn" id="e-save">Save Event</button>
+    </form>
+
+    <div class="overlay hidden"></div>
+
+    <section id="board-view">
+        <div class="Spanal">
+            <input type="search" placeholder="Search events.." id="s-Panal">
+        </div>
+        <div class="filter">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="setup">Setup</button>
+            <button class="filter-btn" data-category="worship">Worship</button>
+            <button class="filter-btn" data-category="kids">Kids</button>
+            <button class="filter-btn" data-category="kitchen">Kitchen</button>
+            <button class="filter-btn" data-category="outreach">Outreach</button>
+        </div>
+        <main class="board"></main>
+    </section>
+
+    <section id="myevents-view" class="hidden">
+        <div class="filter" id="myevents-filter">
+            <button class="filter-btn active" data-scope="created">Created by me</button>
+            <button class="filter-btn" data-scope="enrolled">Enrolled</button>
+        </div>
+        <main class="board" id="myEventsBoard"></main>
+    </section>
+</body>
+</html>
