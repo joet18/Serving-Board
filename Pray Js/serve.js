@@ -128,10 +128,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     <p>${ev.description}</p>
     <p>${dateformatted}</p>
     <p>${spotsLeft > 0 ? spotsLeft + ' spots left' : 'Full'}</p>
-    <button class="cta" data-id="${ev.id}">
-        ${isEnrolled ? 'Cancel my spot' : 'Sign up'}
-    </button>
-    ${isOwner ? `<button class="cta danger-btn" data-delete-id="${ev.id}">Delete</button>` : ''}
+    <div class="card-actions">
+        <button class="cta" data-id="${ev.id}">
+            ${isEnrolled ? 'Cancel my spot' : 'Sign up'}
+        </button>
+        ${isOwner ? `<button class="danger-btn" data-delete-id="${ev.id}">Delete</button>` : ''}
+    </div>
 `;
         return card;
     }
