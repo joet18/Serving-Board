@@ -6,64 +6,65 @@ const signupForm = document.getElementById('sup');
 const signinError = document.getElementById('login-error');
 const signupError = document.getElementById('signup-error');
 
-const USER_KEY = "app_account";
+const API = 'http://localhost:1324/api';
 
-function getUsers(){
-    const raw = localStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw):[];
-};
-function saveUsers(user){
-    localStorage.setItem(USER_KEY,JSON.stringify(user))
-};
-function findUser(username){
-   return getUsers().find(u => u.username === username)
-};
 //signup
-signupForm.addEventListener('submit', (e)=>{
+signupForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
     signupError.textContent = '';
-const [usernameField,passwordField]= signupForm.querySelectorAll('.input-field');
-const username = usernameField.value.trim();
-const password = passwordField.value;
+    const [usernameField,passwordField]= signupForm.querySelectorAll('.input-field');
+    const username = usernameField.value.trim();
+    const password = passwordField.value;
 
-if(!username || !password){
+    if(!username || !password){
+        signupError.textContent = 'Please fill out both fields.';
+        return;
+    }
 
-    signupError.textContent = 'Please fill out both fields.';
-    return;
-}
-if (findUser(username)){
-  signupError.textContent = 'Username already taken!';
- return ;
-}
- const users = getUsers();
-        console.log(users);
-        users.push({ username, password });
-        saveUsers(users);
+    try {
+        const res = await fetch(`${API}/auth/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            signupError.textContent = data.error;
+            return;
+        }
         signupForm.reset();
         signupError.style.color = 'var(--brand)';
-        signupError.textContent = 'Account created! You can now log in.';
-
+        signupError.textContent = data.message;
+    } catch (err) {
+        signupError.textContent = 'Could not reach the server.';
+    }
 });
-//log in 
-signinForm.addEventListener('submit',(e)=>{
 
+//log in
+signinForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
     signinError.textContent = '';
 
     const [usernameField,passwordField] = signinForm.querySelectorAll('.input-field');
-
     const username = usernameField.value.trim();
     const password = passwordField.value;
-    const user = findUser(username);
 
-    if (!user|| user.password !== password){
-        signinError.textContent = 'Invalide username or password';
-        return;
+    try {
+        const res = await fetch(`${API}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            signinError.textContent = data.error;
+            return;
+        }
+        const SESSION_KEY = 'user.session';
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ username: data.username }));
+        window.location.replace('board.html');
+    } catch (err) {
+        signinError.textContent = 'Could not reach the server.';
     }
-// session for vertifying who
-   const SESSION_KEY = 'user.session'
-    sessionStorage.setItem(SESSION_KEY,JSON.stringify({username:user.username}));
-    window.location.replace('board.html');
 });
 });
-

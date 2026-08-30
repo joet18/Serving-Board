@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     const boardView = document.getElementById('board-view');
     const myeventsView = document.getElementById('myevents-view');
 
+    const API = 'http://localhost:1324/api';
 
     //sesion duarde and get
     const SESSION_KEY = 'user.session'
-    const EVENTS_KEY = 'app_events'
     //for search
     let currentSearch = '';
     ////////// for catagori filter
@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     //////
     //my events page
     let myEventsScope = 'created';
+
+    // in-memory cache, refreshed after every mutation
+    let allEvents = [];
 
     const raw = sessionStorage.getItem(SESSION_KEY);
     const session = raw ? JSON.parse(raw) : null;
@@ -58,22 +61,17 @@ document.addEventListener('DOMContentLoaded', async (e) => {
          overlay.classList.add('hidden');
     })
 
-    function getEvents() {
-        const raw = localStorage.getItem(EVENTS_KEY);
-        return raw ? JSON.parse(raw) : [];
-    }
-
-    function saveEvents(events) {
-        localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+    async function fetchEvents() {
+        const res = await fetch(`${API}/events`);
+        allEvents = await res.json();
+        return allEvents;
     }
 
     function getUserEvents() {
-        const allEvents = getEvents();
         return allEvents.filter(ev => ev.createdBy === session.username);
     };
 
     function getEnrolledEvents() {
-        const allEvents = getEvents();
         return allEvents.filter(ev => ev.enrolledUsers.includes(session.username));
     }
 
@@ -84,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     const capacityInput = document.getElementById('event-capacity');
     const descInput = document.getElementById('event-description');
 
-    panal.addEventListener('submit', (e) => {
+    panal.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const title = titleInput.value.trim();
@@ -95,42 +93,24 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
         if (!title || !date || !capacity) return;
 
-        const events = getEvents();
-
-        events.push({
-            id: Date.now().toString(),
-            title,
-            date,
-            category,
-            capacity,
-            description,
-            createdBy: session.username,
-            enrolledUsers: []
+        await fetch(`${API}/events`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, date, category, capacity, description, createdBy: session.username }),
         });
-
-        saveEvents(events);
 
         panal.reset();
         panal.classList.add('hidden');
         overlay.classList.add('hidden');
 
+        await fetchEvents();
         updateBoard();
     });
-
-    //fetching the default-events from the .json file in Datas
-    async function DefaultEvents() {
-        const existing = getEvents();
-        if (existing.length > 0) return;
-        try {
-            const res = await fetch('../Data/default-events.json');
-            const data = await res.json();
-            saveEvents(data);
-        } catch (err) { console.log(`Failed to load default events`, err) }
-    };
 
     function buildCard(ev) {
         const spotsLeft = ev.capacity - ev.enrolledUsers.length;
         const isEnrolled = ev.enrolledUsers.includes(session.username);
+        const isOwner = ev.createdBy === session.username;
         // formating the date for render
         const dateObj = new Date(ev.date + 'T00:00:00');
         const dateformatted = dateObj.toLocaleDateString('en-US', {
@@ -151,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     <button class="cta" data-id="${ev.id}">
         ${isEnrolled ? 'Cancel my spot' : 'Sign up'}
     </button>
+    ${isOwner ? `<button class="cta danger-btn" data-delete-id="${ev.id}">Delete</button>` : ''}
 `;
         return card;
     }
@@ -161,43 +142,54 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         events.forEach(ev => container.appendChild(buildCard(ev)));
     };
 
-    cardBoard.addEventListener('click', (e) => {
+    async function handleEnrollClick(e) {
         if (!e.target.classList.contains('cta')) return;
+        if (e.target.dataset.deleteId) return; // skip delete buttons
         const eventId = e.target.dataset.id;
-        const events = getEvents();
-        const ev = events.find(item => item.id === eventId);
+        const ev = allEvents.find(item => item.id === eventId);
         if (!ev) return;
 
         const isEnrolled = ev.enrolledUsers.includes(session.username);
         if (isEnrolled) {
-            ev.enrolledUsers = ev.enrolledUsers.filter(u => u !== session.username);
+            await fetch(`${API}/events/${eventId}/unenroll`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: session.username }),
+            });
         } else {
             if (ev.enrolledUsers.length >= ev.capacity) return;
-            ev.enrolledUsers.push(session.username);
+            await fetch(`${API}/events/${eventId}/enroll`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: session.username }),
+            });
         }
 
-        saveEvents(events);
-        updateBoard()
-    });
-
-    myEventsBoard.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('cta')) return;
-        const eventId = e.target.dataset.id;
-        const events = getEvents();
-        const ev = events.find(item => item.id === eventId);
-        if (!ev) return;
-
-        const isEnrolled = ev.enrolledUsers.includes(session.username);
-        if (isEnrolled) {
-            ev.enrolledUsers = ev.enrolledUsers.filter(u => u !== session.username);
-        } else {
-            if (ev.enrolledUsers.length >= ev.capacity) return;
-            ev.enrolledUsers.push(session.username);
-        }
-
-        saveEvents(events);
+        await fetchEvents();
+        updateBoard();
         updateMyEvents();
-    });
+    }
+
+    cardBoard.addEventListener('click', handleEnrollClick);
+    myEventsBoard.addEventListener('click', handleEnrollClick);
+
+    async function handleDelete(e) {
+        if (!e.target.dataset.deleteId) return;
+        const eventId = e.target.dataset.deleteId;
+
+        await fetch(`${API}/events/${eventId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: session.username }),
+        });
+
+        await fetchEvents();
+        updateBoard();
+        updateMyEvents();
+    }
+
+    cardBoard.addEventListener('click', handleDelete);
+    myEventsBoard.addEventListener('click', handleDelete);
 
     searchInput.addEventListener('input', (e) => {
         currentSearch = e.target.value.toLowerCase();
@@ -233,8 +225,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     //search and filter oulet
     function updateBoard() {
-        const events = getEvents();
-        const visible = events.filter(ev =>
+        const visible = allEvents.filter(ev =>
             ev.title.toLowerCase().includes(currentSearch) &&
             (currentCategory === 'all' || ev.category === currentCategory)
         );
@@ -264,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         updateMyEvents();
     });
 
-    await DefaultEvents();
+    await fetchEvents();
     updateBoard();
 
 });
