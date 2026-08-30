@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     function buildCard(ev) {
         const spotsLeft = ev.capacity - ev.enrolledUsers.length;
         const isEnrolled = ev.enrolledUsers.includes(session.username);
+        const isOwner = ev.createdBy === session.username;
         // formating the date for render
         const dateObj = new Date(ev.date + 'T00:00:00');
         const dateformatted = dateObj.toLocaleDateString('en-US', {
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     <button class="cta" data-id="${ev.id}">
         ${isEnrolled ? 'Cancel my spot' : 'Sign up'}
     </button>
+    ${isOwner ? `<button class="cta danger-btn" data-delete-id="${ev.id}">Delete</button>` : ''}
 `;
         return card;
     }
@@ -198,6 +200,19 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         saveEvents(events);
         updateMyEvents();
     });
+
+    function handleDelete(e) {
+        if (!e.target.dataset.deleteId) return;
+        const eventId = e.target.dataset.deleteId;
+        let events = getEvents();
+        events = events.filter(ev => ev.id !== eventId);
+        saveEvents(events);
+        updateBoard();
+        updateMyEvents();
+    }
+
+    cardBoard.addEventListener('click', handleDelete);
+    myEventsBoard.addEventListener('click', handleDelete);
 
     searchInput.addEventListener('input', (e) => {
         currentSearch = e.target.value.toLowerCase();

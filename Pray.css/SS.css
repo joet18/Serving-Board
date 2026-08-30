@@ -322,6 +322,13 @@ select:focus{
 .cta:hover{
     background:var(--brand-dark);
 }
+.danger-btn {
+    background: var(--danger) !important;
+    margin-top: 0.25rem;
+}
+.danger-btn:hover {
+    background: #922e24 !important;
+}
 .event-card h2{
     margin: 0;
     font-size: 1.05rem;
